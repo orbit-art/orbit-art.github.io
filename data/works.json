@@ -1,14 +1,6 @@
 [
     {
-        "image": "images/portfolio/skin1.png",
+        "image": "images/portfolio/skin1.jpg",
         "title": "Весёлый маг"
-    },
-    {
-        "image": "images/portfolio/skin2.png",
-        "title": "Скин 2"
-    },
-    {
-        "image": "images/portfolio/render1.jpg",
-        "title": "Рендер 1"
     }
 ]
