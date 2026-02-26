@@ -20,31 +20,8 @@
     <main class="main">
         <div class="container">
             <h1 class="page-title">Портфолио</h1>
-            <div class="portfolio-grid">
-                <div class="work-card">
-                    <div class="work-image">🔥</div>
-                    <div class="work-title">Скин 1</div>
-                </div>
-                <div class="work-card">
-                    <div class="work-image">✨</div>
-                    <div class="work-title">Скин 2</div>
-                </div>
-                <div class="work-card">
-                    <div class="work-image">💫</div>
-                    <div class="work-title">Скин 3</div>
-                </div>
-                <div class="work-card">
-                    <div class="work-image">🎨</div>
-                    <div class="work-title">Рендер 1</div>
-                </div>
-                <div class="work-card">
-                    <div class="work-image">🌀</div>
-                    <div class="work-title">Рендер 2</div>
-                </div>
-                <div class="work-card">
-                    <div class="work-image">⭐</div>
-                    <div class="work-title">Пиксель-арт</div>
-                </div>
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- Сюда подгрузятся работы -->
             </div>
         </div>
     </main>
@@ -63,5 +40,33 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        fetch('data/works.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить работы');
+                }
+                return response.json();
+            })
+            .then(works => {
+                const grid = document.getElementById('portfolioGrid');
+                grid.innerHTML = '';
+                
+                works.forEach(work => {
+                    const card = `
+                        <div class="work-card">
+                            <img src="${work.image}" alt="${work.title}" class="work-image" loading="lazy">
+                            <div class="work-title">${work.title}</div>
+                        </div>
+                    `;
+                    grid.innerHTML += card;
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                document.getElementById('portfolioGrid').innerHTML = '<p style="color: #ff4444;">Ошибка загрузки работ</p>';
+            });
+    </script>
 </body>
 </html>
