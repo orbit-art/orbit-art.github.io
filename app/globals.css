@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-color: #f8f9fa;
+  --surface-color: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #495057;
+  --accent-color: #7b2cbf;
+  --accent-glow: #9d4edd;
+  --border-color: #e9ecef;
+}
+
+[data-theme='dark'] {
+  --bg-color: #050507;
+  --surface-color: #0f0f13;
+  --text-primary: #ffffff;
+  --text-secondary: #b4b4bf;
+  --border-color: #1f1f25;
+}
+
+[data-accent='purple'] { --accent-color: #7b2cbf; --accent-glow: #9d4edd; }
+[data-accent='blue'] { --accent-color: #2563eb; --accent-glow: #3b82f6; }
+[data-accent='green'] { --accent-color: #059669; --accent-glow: #10b981; }
+[data-accent='orange'] { --accent-color: #ea580c; --accent-glow: #f97316; }
+
+body.attic-unlocked { --accent-color: #10b981; --accent-glow: #34d399; }
+
+@layer base {
+  * { @apply box-border; }
+
+  html, body {
+    @apply m-0 min-h-screen;
+  }
+
+  body {
+    @apply bg-bg text-text-primary font-ui antialiased;
+  }
+
+  a {
+    @apply no-underline text-inherit transition-colors;
+  }
+
+  a:hover {
+    @apply text-accent-glow;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .focus-visible {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
