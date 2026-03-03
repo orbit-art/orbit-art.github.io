@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Dune Rise';
+  src: local('Dune Rise'), local('Dune Rise Regular');
+  font-display: swap;
+}
+
+:root {
+  --bg-color: #f8f9fa;
+  --surface-color: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #495057;
+  --accent-color: #9f7b2e;
+  --accent-glow: #c89c3d;
+  --border-color: #e9ecef;
+  --font-dune: 'Dune Rise';
+  --font-ui: Inter, 'Segoe UI', Arial, sans-serif;
+  --font-code: 'JetBrains Mono', Consolas, monospace;
+}
+
+[data-theme='dark'] {
+  --bg-color: #050507;
+  --surface-color: #0f0f13;
+  --text-primary: #ffffff;
+  --text-secondary: #b4b4bf;
+  --border-color: #1f1f25;
+}
+
+[data-accent='purple'] { --accent-color: #7c61ff; --accent-glow: #9f8dff; }
+[data-accent='blue'] { --accent-color: #2f88ff; --accent-glow: #5ca9ff; }
+[data-accent='green'] { --accent-color: #1da67a; --accent-glow: #3ac99a; }
+[data-accent='orange'] { --accent-color: #c78b35; --accent-glow: #e0a54d; }
+
+body.attic-unlocked { --accent-color: #10b981; --accent-glow: #34d399; }
+
+@layer base {
+  * { @apply box-border; }
+
+  html, body {
+    @apply m-0 min-h-screen;
+  }
+
+  body {
+    @apply bg-bg text-text-primary font-ui antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-dune), Impact, sans-serif;
+    @apply font-bold uppercase;
+    letter-spacing: 0.12em;
+    text-wrap: balance;
+    text-shadow: 0 0 24px color-mix(in srgb, var(--accent-glow) 35%, transparent);
+  }
+
+  h1 {
+    line-height: 1.08;
+  }
+
+  h2 {
+    line-height: 1.14;
+  }
+
+  h3 {
+    line-height: 1.2;
+    letter-spacing: 0.09em;
+  }
+
+  a {
+    @apply no-underline text-inherit transition-colors;
+  }
+
+  a:hover {
+    @apply text-accent-glow;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .focus-visible {
+    outline: 2px solid var(--accent-glow);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  .dune-heading {
+    font-family: var(--font-dune), Impact, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    text-shadow: 0 0 20px color-mix(in srgb, var(--accent-glow) 40%, transparent);
+  }
+}
