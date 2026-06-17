@@ -10,8 +10,13 @@
   let mouseY = -1000;
   let time = 0;
   let animationId;
+  let paused = false;
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = !window.matchMedia('(hover: hover)').matches;
 
   function setup() {
+    if (prefersReduced || isTouch) return;
     if (animationId) cancelAnimationFrame(animationId);
     canvas = document.querySelector('.grid-canvas');
     if (!canvas) return;
@@ -23,7 +28,7 @@
 
   function resize() {
     if (!canvas) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = window.innerWidth;
     const h = window.innerHeight;
     canvas.width = w * dpr;
@@ -43,6 +48,11 @@
   }
 
   function draw() {
+    if (paused || document.hidden) {
+      animationId = requestAnimationFrame(draw);
+      return;
+    }
+
     const w = window.innerWidth;
     const h = window.innerHeight;
 
@@ -120,6 +130,10 @@
     mouseX = e.clientX;
     mouseY = e.clientY;
   }
+
+  document.addEventListener('visibilitychange', () => {
+    paused = document.hidden;
+  });
 
   window.addEventListener('resize', resize);
   window.addEventListener('mousemove', onMouseMove);

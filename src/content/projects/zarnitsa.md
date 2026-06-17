@@ -2,14 +2,14 @@
 title: "Зарница"
 description: "Команда разработчиков и Minecraft-сервер Azari I на Purpur с кастомным контентом"
 tags: ["Paper", "Purpur", "Denizen", "ItemsAdder", "Java"]
-image: "/images/projects/zarnitsa.png"
+image: "../../assets/images/projects/zarnitsa.png"
 gallery:
-  - "/images/projects/zarnitsa.png"
-  - "/images/projects/gallery/zarnitsa-1.png"
-  - "/images/projects/gallery/zarnitsa-2.png"
-  - "/images/projects/gallery/zarnitsa-3.png"
-  - "/images/projects/gallery/zarnitsa-4.png"
-  - "/images/projects/gallery/zarnitsa-5.png"
+  - "../../assets/images/projects/zarnitsa.png"
+  - "../../assets/images/projects/gallery/zarnitsa-1.png"
+  - "../../assets/images/projects/gallery/zarnitsa-2.png"
+  - "../../assets/images/projects/gallery/zarnitsa-3.png"
+  - "../../assets/images/projects/gallery/zarnitsa-4.png"
+  - "../../assets/images/projects/gallery/zarnitsa-5.png"
 links:
   - label: "GitHub"
     url: "#"

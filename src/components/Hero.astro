@@ -1,5 +1,8 @@
 ---
+import { getImage } from 'astro:assets';
+import heroImg from '../assets/images/render.png';
 
+const optimizedHero = await getImage({ src: heroImg, width: 800, format: 'webp' });
 ---
 
 <section class="hero">
@@ -7,43 +10,43 @@
     <div class="hero__content">
       <div class="hero__badge t-text-reveal">
         <span class="hero__badge-dot"></span>
-        <span style="color: var(--text-tertiary)">Делаю в кайф</span>
+        <span class="hero__badge-text">Делаю в кайф</span>
       </div>
       <h1 class="hero__title t-text-reveal" style="--t-stagger: 1">
         Создаю<br />
         <span class="gradient-text">ваши миры</span>
       </h1>
-      <p class="hero__subtitle t-text-reveal" style="--t-stagger: 2; color: var(--text-secondary)">
+      <p class="hero__subtitle t-text-reveal" style="--t-stagger: 2">
         Скинмейкер, дизайнер и разработчик. Майню скины, верстаю интерфейсы, пишу код.
       </p>
       <div class="hero__actions t-text-reveal" style="--t-stagger: 3">
-        <a href="/portfolio" class="btn btn-primary">
+        <a href="/projects" class="btn btn-primary">
           Смотреть работы
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
-        <a href="/contacts" class="btn btn-outline" style="color: var(--text-primary)">Связаться</a>
+        <a href="/about" class="btn btn-outline">Связаться</a>
       </div>
       <div class="hero__stats t-text-reveal" style="--t-stagger: 4">
         <div class="hero__stat">
           <span class="hero__stat-value gradient-text">100+</span>
-          <span class="hero__stat-label" style="color: var(--text-tertiary)">Работ</span>
+          <span class="hero__stat-label">Работ</span>
         </div>
         <div class="hero__stat">
           <span class="hero__stat-value gradient-text">4</span>
-          <span class="hero__stat-label" style="color: var(--text-tertiary)">Года опыта</span>
+          <span class="hero__stat-label">Года опыта</span>
         </div>
         <div class="hero__stat">
           <span class="hero__stat-value gradient-text">3</span>
-          <span class="hero__stat-label" style="color: var(--text-tertiary)">Личных проекта</span>
+          <span class="hero__stat-label">Личных проекта</span>
         </div>
       </div>
     </div>
     <div class="hero__visual t-text-reveal" style="--t-stagger: 2">
       <div class="hero__blob"></div>
       <div class="hero__render-wrap">
-        <img src="/images/render.png" alt="3D рендер персонажа" class="hero__render" loading="eager" />
+        <img src={optimizedHero.src} srcset={optimizedHero.srcSet.attribute} alt="3D рендер персонажа" class="hero__render" width="800" height="1000" fetchpriority="high" />
         <div class="hero__render-line"></div>
       </div>
     </div>

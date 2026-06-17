@@ -1,18 +1,31 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+import zarnitsaImg from '../../assets/images/projects/zarnitsa.png';
+
+const imgMap: Record<string, ImageMetadata> = {
+  '../../assets/images/projects/zarnitsa.png': zarnitsaImg,
+};
+
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+
+const projectImages = await Promise.all(
+  projects.map(async (p) => {
+    const resolved = imgMap[p.data.image] ?? zarnitsaImg;
+    return await getImage({ src: resolved, width: 720, format: 'webp' });
+  })
+);
 ---
 
 <BaseLayout title="Проекты — Orbit-dev">
   <section class="projects-page section">
     <div class="container">
       <div class="projects-page__header">
-        <span class="section-label" style="color: var(--text-tertiary)">Проекты</span>
+        <span class="section-label">Проекты</span>
         <h2 class="section-title">Крупные проекты</h2>
-        <p class="section-subtitle" style="color: var(--text-secondary)">
+        <p class="section-subtitle">
           Серьёзные проекты с продуманной архитектурой
         </p>
       </div>
@@ -25,11 +38,11 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
             style={`--i: ${i}`}
           >
             <div class="project-card__image">
-              <Image src={project.data.image} alt={project.data.title} width={360} height={240} />
+              <img src={projectImages[i].src} srcset={projectImages[i].srcSet.attribute} alt={project.data.title} width={720} height={480} loading="lazy" />
             </div>
             <div class="project-card__body">
-              <h3 class="project-card__title" style="color: var(--text-primary)">{project.data.title}</h3>
-              <p class="project-card__desc" style="color: var(--text-secondary)">{project.data.description}</p>
+              <h3 class="project-card__title">{project.data.title}</h3>
+              <p class="project-card__desc">{project.data.description}</p>
               <div class="project-card__tags">
                 {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
               </div>

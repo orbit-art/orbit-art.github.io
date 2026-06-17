@@ -1,7 +1,23 @@
 ---
-import { Image } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+import mainImg from '../../assets/images/projects/zarnitsa.png';
+import g1 from '../../assets/images/projects/gallery/zarnitsa-1.png';
+import g2 from '../../assets/images/projects/gallery/zarnitsa-2.png';
+import g3 from '../../assets/images/projects/gallery/zarnitsa-3.png';
+import g4 from '../../assets/images/projects/gallery/zarnitsa-4.png';
+import g5 from '../../assets/images/projects/gallery/zarnitsa-5.png';
+
+const imgMap: Record<string, ImageMetadata> = {
+  '../../assets/images/projects/zarnitsa.png': mainImg,
+  '../../assets/images/projects/gallery/zarnitsa-1.png': g1,
+  '../../assets/images/projects/gallery/zarnitsa-2.png': g2,
+  '../../assets/images/projects/gallery/zarnitsa-3.png': g3,
+  '../../assets/images/projects/gallery/zarnitsa-4.png': g4,
+  '../../assets/images/projects/gallery/zarnitsa-5.png': g5,
+};
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -14,6 +30,14 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
+
+const heroImage = await getImage({ src: imgMap[data.image] ?? mainImg, width: 1200, format: 'webp' });
+const galleryImages = await Promise.all(
+  (data.gallery ?? []).map(async (img: string) => {
+    const resolved = imgMap[img] ?? mainImg;
+    return await getImage({ src: resolved, width: 1200, format: 'webp' });
+  })
+);
 ---
 
 <BaseLayout title={`${data.title} — Orbit-dev`}>
@@ -36,20 +60,20 @@ const { Content } = await render(project);
       </div>
 
       <div class="project-detail__image glass-card">
-        <Image src={data.image} alt={data.title} width={1200} height={800} />
+        <img src={heroImage.src} srcset={heroImage.srcSet.attribute} alt={data.title} width={1200} height={800} loading="lazy" />
       </div>
 
       <div class="project-detail__content glass-card">
         <Content />
       </div>
 
-      {data.gallery && data.gallery.length > 0 && (
+      {galleryImages.length > 0 && (
         <div class="project-detail__gallery">
           <h2 class="project-detail__gallery-title">Галерея</h2>
           <div class="gallery__grid">
-            {data.gallery.map((img) => (
+            {galleryImages.map((img) => (
               <div class="gallery__item glass-card">
-                <Image src={img} alt="" width={1200} height={800} />
+                <img src={img.src} srcset={img.srcSet.attribute} alt="" width={1200} height={800} loading="lazy" />
               </div>
             ))}
           </div>
