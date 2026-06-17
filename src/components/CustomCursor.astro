@@ -11,6 +11,9 @@
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isTouch || prefersReduced) return;
 
+    if ((window as any).__cursorRunning) return;
+    (window as any).__cursorRunning = true;
+
     const canvas = document.querySelector('.cursor-canvas') as HTMLCanvasElement;
     const pen = document.querySelector('.cursor-pen') as HTMLElement;
     if (!canvas || !pen) return;
@@ -33,15 +36,12 @@
 
     document.documentElement.style.cursor = 'none';
 
-    if ((window as any).__cursorRunning) return;
-    (window as any).__cursorRunning = true;
-
     let mx = -200, my = -200;
     let pmx = -200, pmy = -200;
     let speed = 0;
     let hovering = false;
     let clickBurst = 0;
-    let rafId = 0;
+    let mouseOnPage = true;
 
     const selectors = 'a, button, .glass-card, .btn, .tag, .project-card, .sidebar__link, .hero__render-wrap, [data-cursor-pointer]';
 
@@ -93,33 +93,45 @@
       }
     }
 
-    function onMouseMove(e: MouseEvent) {
+    document.addEventListener('mousemove', (e) => {
       mx = e.clientX;
       my = e.clientY;
-    }
+      if (!mouseOnPage) {
+        mouseOnPage = true;
+        pen.style.opacity = '1';
+        canvas.style.opacity = '1';
+      }
+    });
 
-    function onMouseDown() {
+    document.addEventListener('mouseleave', () => {
+      mouseOnPage = false;
+      pen.style.opacity = '0';
+      canvas.style.opacity = '0';
+    });
+
+    document.addEventListener('mouseenter', () => {
+      mouseOnPage = true;
+      pen.style.opacity = '1';
+      canvas.style.opacity = '1';
+    });
+
+    document.addEventListener('mousedown', () => {
       clickBurst = 1;
-    }
+    });
 
-    function onMouseOver(e: MouseEvent) {
+    document.addEventListener('mouseover', (e) => {
       if ((e.target as HTMLElement)?.closest(selectors)) {
         hovering = true;
         pen.classList.add('cursor-pen--hover');
       }
-    }
+    });
 
-    function onMouseOut(e: MouseEvent) {
+    document.addEventListener('mouseout', (e) => {
       if ((e.target as HTMLElement)?.closest(selectors)) {
         hovering = false;
         pen.classList.remove('cursor-pen--hover');
       }
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('mouseover', onMouseOver);
-    document.addEventListener('mouseout', onMouseOut);
+    });
 
     function update() {
       const dx = mx - pmx;
@@ -133,7 +145,7 @@
 
       pen.style.transform = `translate(${mx}px, ${my}px) rotate(${angle + Math.PI / 4}deg) translate(-50%, -50%) skewX(${-tilt}deg)`;
 
-      if (speed > 2) {
+      if (speed > 2 && mouseOnPage) {
         spawnTrail(pmx, pmy, speed > 10 ? 2 : 1);
       }
 
@@ -180,25 +192,14 @@
         ctx.restore();
       }
 
-      rafId = requestAnimationFrame(update);
+      requestAnimationFrame(update);
     }
 
-    rafId = requestAnimationFrame(update);
-
+    requestAnimationFrame(update);
     window.addEventListener('resize', resizeCanvas);
 
     document.addEventListener('astro:page-load', () => {
       document.documentElement.style.cursor = 'none';
-    });
-
-    document.addEventListener('astro:before-swap', () => {
-      cancelAnimationFrame(rafId);
-      particles.length = 0;
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('mouseover', onMouseOver);
-      document.removeEventListener('mouseout', onMouseOut);
-      (window as any).__cursorRunning = false;
     });
   })();
 </script>
@@ -212,6 +213,7 @@
     height: 100%;
     pointer-events: none;
     z-index: 99998;
+    transition: opacity 0.3s;
   }
 
   .cursor-pen {
@@ -224,6 +226,7 @@
     z-index: 99999;
     will-change: transform;
     transform-origin: center center;
+    transition: opacity 0.3s;
   }
 
   .cursor-pen::before {
