@@ -11,12 +11,11 @@
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (isTouch || prefersReduced) return;
 
-    if ((window as any).__cursorRunning) return;
-    (window as any).__cursorRunning = true;
-
     const canvas = document.querySelector('.cursor-canvas') as HTMLCanvasElement;
     const pen = document.querySelector('.cursor-pen') as HTMLElement;
     if (!canvas || !pen) return;
+
+    if ((window as any).__cursorRaf) cancelAnimationFrame((window as any).__cursorRaf);
 
     const ctx = canvas.getContext('2d')!;
     let W = window.innerWidth;
@@ -93,7 +92,7 @@
       }
     }
 
-    document.addEventListener('mousemove', (e) => {
+    function onMouseMove(e: MouseEvent) {
       mx = e.clientX;
       my = e.clientY;
       if (!mouseOnPage) {
@@ -101,39 +100,56 @@
         pen.style.opacity = '1';
         canvas.style.opacity = '1';
       }
-    });
+    }
 
-    document.addEventListener('mouseleave', () => {
-      mouseOnPage = false;
-      pen.style.opacity = '0';
-      canvas.style.opacity = '0';
-    });
-
-    document.addEventListener('mouseenter', () => {
-      mouseOnPage = true;
-      pen.style.opacity = '1';
-      canvas.style.opacity = '1';
-    });
-
-    document.addEventListener('mousedown', () => {
+    function onMouseDown() {
       clickBurst = 1;
-    });
+    }
 
-    document.addEventListener('mouseover', (e) => {
+    function onMouseOver(e: MouseEvent) {
       if ((e.target as HTMLElement)?.closest(selectors)) {
         hovering = true;
         pen.classList.add('cursor-pen--hover');
       }
-    });
+    }
 
-    document.addEventListener('mouseout', (e) => {
+    function onMouseOut(e: MouseEvent) {
       if ((e.target as HTMLElement)?.closest(selectors)) {
         hovering = false;
         pen.classList.remove('cursor-pen--hover');
       }
-    });
+    }
+
+    function onMouseLeave() {
+      mouseOnPage = false;
+      pen.style.opacity = '0';
+      canvas.style.opacity = '0';
+    }
+
+    function onMouseEnter() {
+      mouseOnPage = true;
+      pen.style.opacity = '1';
+      canvas.style.opacity = '1';
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mousedown', onMouseDown);
+    document.addEventListener('mouseover', onMouseOver);
+    document.addEventListener('mouseout', onMouseOut);
+    document.addEventListener('mouseleave', onMouseLeave);
+    document.addEventListener('mouseenter', onMouseEnter);
 
     function update() {
+      if (!canvas.isConnected || !pen.isConnected) {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mousedown', onMouseDown);
+        document.removeEventListener('mouseover', onMouseOver);
+        document.removeEventListener('mouseout', onMouseOut);
+        document.removeEventListener('mouseleave', onMouseLeave);
+        document.removeEventListener('mouseenter', onMouseEnter);
+        return;
+      }
+
       const dx = mx - pmx;
       const dy = my - pmy;
       speed = Math.sqrt(dx * dx + dy * dy);
@@ -192,10 +208,10 @@
         ctx.restore();
       }
 
-      requestAnimationFrame(update);
+      (window as any).__cursorRaf = requestAnimationFrame(update);
     }
 
-    requestAnimationFrame(update);
+    (window as any).__cursorRaf = requestAnimationFrame(update);
     window.addEventListener('resize', resizeCanvas);
 
     document.addEventListener('astro:page-load', () => {
