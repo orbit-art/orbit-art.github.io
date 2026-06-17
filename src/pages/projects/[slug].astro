@@ -1,0 +1,225 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id.replace(/\.md$/, '') },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={`${data.title} — Orbit-dev`}>
+  <article class="project-detail">
+    <div class="container">
+      <div class="project-detail__header">
+        <a href="/projects" class="project-detail__back">← Все проекты</a>
+        <div class="project-detail__tags">
+          {data.tags.map((tag) => <span class="tag">{tag}</span>)}
+        </div>
+        <h1 class="project-detail__title">{data.title}</h1>
+        <p class="project-detail__desc">{data.description}</p>
+        {data.links && (
+          <div class="project-detail__links">
+            {data.links.map((link) => (
+              <a href={link.url} class="btn btn-primary" target="_blank">{link.label}</a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div class="project-detail__image glass-card">
+        <Image src={data.image} alt={data.title} width={1200} height={800} />
+      </div>
+
+      <div class="project-detail__content glass-card">
+        <Content />
+      </div>
+
+      {data.gallery && data.gallery.length > 0 && (
+        <div class="project-detail__gallery">
+          <h2 class="project-detail__gallery-title">Галерея</h2>
+          <div class="gallery__grid">
+            {data.gallery.map((img) => (
+              <div class="gallery__item glass-card">
+                <Image src={img} alt="" width={1200} height={800} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail {
+    padding: 140px 0 80px;
+  }
+
+  .project-detail__header {
+    max-width: 720px;
+    margin-bottom: 48px;
+  }
+
+  .project-detail__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    transition: color var(--transition);
+  }
+
+  .project-detail__back:hover {
+    color: var(--accent);
+  }
+
+  .project-detail__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .project-detail__title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .project-detail__desc {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .project-detail__links {
+    display: flex;
+    gap: 12px;
+  }
+
+  .project-detail__image {
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+
+  .project-detail__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .project-detail__content {
+    padding: 48px;
+    max-width: 800px;
+    margin-bottom: 48px;
+  }
+
+  .project-detail__content :global(h2) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 32px 0 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .project-detail__content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .project-detail__content :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 24px 0 8px;
+    color: var(--text-primary);
+  }
+
+  .project-detail__content :global(p) {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .project-detail__content :global(ul) {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .project-detail__content :global(li) {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .project-detail__content :global(li::before) {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .project-detail__content :global(strong) {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .project-detail__gallery-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .gallery__item {
+    overflow: hidden;
+  }
+
+  .gallery__item img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .project-detail__title {
+      font-size: 2rem;
+    }
+
+    .project-detail__content {
+      padding: 24px;
+    }
+
+    .gallery__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

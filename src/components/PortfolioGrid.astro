@@ -1,0 +1,252 @@
+---
+const sections = [
+  {
+    label: 'Рендеры',
+    items: [
+      'https://placehold.co/800x600/111111/f97316?text=Render+1',
+      'https://placehold.co/800x600/111111/f97316?text=Render+2',
+      'https://placehold.co/800x600/111111/f97316?text=Render+3',
+    ],
+  },
+  {
+    label: 'Текстуры',
+    items: [
+      'https://placehold.co/800x600/111111/f97316?text=Texture+1',
+      'https://placehold.co/800x600/111111/f97316?text=Texture+2',
+      'https://placehold.co/800x600/111111/f97316?text=Texture+3',
+    ],
+  },
+  {
+    label: 'Дизайн',
+    items: [
+      'https://placehold.co/800x600/111111/f97316?text=Design+1',
+      'https://placehold.co/800x600/111111/f97316?text=Design+2',
+      'https://placehold.co/800x600/111111/f97316?text=Design+3',
+    ],
+  },
+];
+
+const itemsHtml = (items) =>
+  items
+    .map(
+      (src) =>
+        `<div class="portfolio__card glass-card"><div class="portfolio__image"><img src="${src}" alt="" /></div></div>`
+    )
+    .join('');
+---
+
+<section class="portfolio section">
+  <div class="container">
+    <div class="portfolio__top">
+      <div class="portfolio__tabs" role="tablist">
+        <span class="portfolio__pill" aria-hidden="true"></span>
+        {sections.map((s, i) => (
+          <button class="portfolio__tab" role="tab" data-tab={i} aria-selected={i === 0 ? 'true' : 'false'}>
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <div class="portfolio__header">
+        <span class="section-label">Портфолио</span>
+        <h2 class="section-title">Мои работы</h2>
+      </div>
+    </div>
+
+    <div class="portfolio__stage" id="portfolio-stage" set:html={itemsHtml(sections[0].items)}></div>
+  </div>
+</section>
+
+<script>
+  const sections = [
+    { items: ['https://placehold.co/800x600/111111/f97316?text=Render+1', 'https://placehold.co/800x600/111111/f97316?text=Render+2', 'https://placehold.co/800x600/111111/f97316?text=Render+3'] },
+    { items: ['https://placehold.co/800x600/111111/f97316?text=Texture+1', 'https://placehold.co/800x600/111111/f97316?text=Texture+2', 'https://placehold.co/800x600/111111/f97316?text=Texture+3'] },
+    { items: ['https://placehold.co/800x600/111111/f97316?text=Design+1', 'https://placehold.co/800x600/111111/f97316?text=Design+2', 'https://placehold.co/800x600/111111/f97316?text=Design+3'] },
+  ];
+
+  function initTabs() {
+    const stage = document.getElementById('portfolio-stage');
+    const tabs = document.querySelectorAll('.portfolio__tab');
+    const pill = document.querySelector('.portfolio__pill');
+    if (!tabs.length) return;
+
+    let current = 0;
+    let running = false;
+
+    function movePill(tab, instant) {
+      if (!pill) return;
+      const l = tab.offsetLeft;
+      const w = tab.offsetWidth;
+      if (instant) {
+        pill.style.transition = 'none';
+        pill.style.transform = `translateX(${l}px)`;
+        pill.style.width = `${w}px`;
+        void pill.offsetWidth;
+        pill.style.transition = '';
+      } else {
+        pill.style.transform = `translateX(${l}px)`;
+        pill.style.width = `${w}px`;
+      }
+    }
+
+    function cardHtml(items) {
+      return items.map(s => `<div class="portfolio__card glass-card"><div class="portfolio__image"><img src="${s}" alt="" /></div></div>`).join('');
+    }
+
+    // Init pill position
+    movePill(tabs[0], true);
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const idx = parseInt(tab.dataset.tab);
+        if (idx === current || running) return;
+
+        running = true;
+        const dir = idx > current ? 1 : -1;
+
+        movePill(tab);
+
+        stage.style.transition = 'transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease';
+        stage.style.transform = `translateX(${-dir * 35}%)`;
+        stage.style.opacity = '0';
+
+        setTimeout(() => {
+          stage.innerHTML = cardHtml(sections[idx].items);
+          stage.style.transition = 'none';
+          stage.style.transform = `translateX(${dir * 35}%)`;
+          stage.style.opacity = '0';
+          requestAnimationFrame(() => {
+            stage.style.transition = 'transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease';
+            stage.style.transform = 'translateX(0)';
+            stage.style.opacity = '1';
+          });
+          current = idx;
+          running = false;
+        }, 310);
+
+        tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+        tab.setAttribute('aria-selected', 'true');
+      });
+    });
+  }
+
+  initTabs();
+  document.addEventListener('astro:page-load', initTabs);
+</script>
+
+<style>
+  .portfolio__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+    gap: 40px;
+  }
+
+  .portfolio__header {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .portfolio__header .section-label {
+    justify-content: flex-end;
+  }
+
+  .portfolio__header .section-label::before {
+    order: 1;
+  }
+
+  .portfolio__tabs {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px;
+    border-radius: 48px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .portfolio__pill {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    height: 32px;
+    width: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 48px;
+    transform: translateX(0);
+    transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+                width 250ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, width;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .portfolio__tab {
+    position: relative;
+    appearance: none;
+    border: 0;
+    background: transparent;
+    height: 32px;
+    padding: 4px 20px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    border-radius: 48px;
+    z-index: 1;
+    transition: color 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .portfolio__tab:hover,
+  .portfolio__tab[aria-selected="true"] {
+    color: var(--text-primary);
+  }
+
+  .portfolio__stage {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    will-change: transform, opacity;
+  }
+
+  .portfolio__card {
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+
+  .portfolio__image {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .portfolio__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .portfolio__card:hover .portfolio__image img {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .portfolio__top {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
+    .portfolio__header {
+      text-align: left;
+    }
+    .portfolio__header .section-label {
+      justify-content: flex-start;
+    }
+    .portfolio__header .section-label::before {
+      order: 0;
+    }
+  }
+</style>

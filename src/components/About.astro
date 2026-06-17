@@ -1,0 +1,321 @@
+---
+const skills = [
+  { label: 'Дизайн', value: '90%' },
+  { label: 'Скинмейкинг', value: '95%' },
+  { label: 'Разработка', value: '85%' },
+  { label: '3D Моделинг', value: '75%' },
+];
+
+const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Figma', 'Git', 'Minecraft'];
+---
+
+<section class="about section" id="about">
+  <div class="container">
+    <div class="about__header">
+      <div class="about__header-content">
+        <span class="section-label">Обо мне</span>
+        <h2 class="about__title">Кто я<br />и что умею</h2>
+        <p class="about__subtitle">
+          Скинмейкер, дизайнер и разработчик. Создаю персонажей, интерфейсы и цифровые инструменты.
+        </p>
+      </div>
+      <div class="about__avatar">
+        <div class="about__avatar-inner">
+          <span class="about__avatar-letter">O</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="about__content">
+      <div class="about__bio">
+        <p>
+          Начинал со скинмейкинга в Minecraft, дорос до полноценных проектов.
+          Рисую персонажей, моделирую в 3D, верстаю интерфейсы и пишу код.
+        </p>
+        <p>
+          Каждый проект — это возможность совместить эстетику с функциональностью.
+          Люблю, когда результат выглядит круто и работает как часы.
+        </p>
+      </div>
+
+      <div class="about__skills">
+        <div class="skills__list">
+          {skills.map((s) => (
+            <div class="skill">
+              <span class="skill__label">{s.label}</span>
+              <span class="skill__value">{s.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="about__tools" data-reveal>
+      <h3 class="about__tools-title">Инструменты</h3>
+      <div class="tools__cloud">
+        {tools.map((tool) => <span class="tag">{tool}</span>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+    gap: 40px;
+  }
+
+  .about__header-content {
+    text-align: right;
+    flex: 1;
+  }
+
+  .about__header-content .section-label {
+    justify-content: flex-end;
+  }
+
+  .about__header-content .section-label::before {
+    order: 1;
+  }
+
+  .about__title {
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200% 100%;
+    animation: shimmer var(--shimmer-dur) ease-in-out infinite;
+  }
+
+  .about__subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 420px;
+    margin-left: auto;
+  }
+
+  .about__avatar {
+    flex-shrink: 0;
+  }
+
+  .about__avatar-inner {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05));
+    border: 1px solid rgba(249, 115, 22, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .about__avatar-inner:hover {
+    border-color: rgba(249, 115, 22, 0.4);
+    box-shadow: 0 0 40px rgba(249, 115, 22, 0.1);
+    transform: scale(1.05);
+  }
+
+  .about__avatar-letter {
+    font-size: 5rem;
+    font-weight: 800;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .about__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .about__bio {
+    padding: 32px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .about__bio:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .about__bio p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+  }
+
+  .about__bio p + p {
+    margin-top: 16px;
+  }
+
+  .about__skills {
+    padding: 32px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .about__skills:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .skills__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .skill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .skill:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .skill__label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .skill__value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .about__tools {
+    padding: 28px 32px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .about__tools.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .about__tools:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .about__tools-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+
+  .tools__cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .about.section {
+    min-height: 100vh;
+    padding-bottom: 160px;
+  }
+
+  @media (max-width: 768px) {
+    .about__header {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .about__header-content {
+      text-align: left;
+    }
+
+    .about__header-content .section-label {
+      justify-content: flex-start;
+    }
+
+    .about__header-content .section-label::before {
+      order: 0;
+    }
+
+    .about__subtitle {
+      margin-left: 0;
+    }
+
+    .about__content {
+      grid-template-columns: 1fr;
+    }
+
+    .about__avatar-inner {
+      width: 120px;
+      height: 120px;
+    }
+
+    .about__avatar-letter {
+      font-size: 2.5rem;
+    }
+
+    .about.section {
+      padding-bottom: 100px;
+    }
+  }
+</style>
+
+<script>
+  function initReveal() {
+    const el = document.querySelector('[data-reveal]');
+    if (!el) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle('revealed', entry.isIntersecting);
+      });
+    }, { threshold: 0.2 });
+    observer.observe(el);
+  }
+
+  initReveal();
+  document.addEventListener('astro:page-load', initReveal);
+</script>

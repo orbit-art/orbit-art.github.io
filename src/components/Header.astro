@@ -1,0 +1,128 @@
+---
+const links = [
+  { href: '/', label: 'Главная' },
+  { href: '/portfolio', label: 'Портфолио' },
+  { href: '/contacts', label: 'Контакты' },
+];
+---
+
+<header class="header glass">
+  <div class="container header__inner">
+    <a href="/" class="logo">
+      <span class="logo__icon">◆</span>
+      <span class="logo__text">Orbit<span class="logo__accent">dev</span></span>
+    </a>
+    <nav class="nav">
+      <ul class="nav__list">
+        {links.map((link) => (
+          <li>
+            <a href={link.href} class="nav__link">{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <a href="/contacts" class="btn-primary nav__cta">Связаться</a>
+    <button class="burger" aria-label="Меню">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    border-radius: 16px;
+    padding: 0 8px;
+    max-width: calc(var(--max-width) + 48px);
+    width: calc(100% - 48px);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+
+  .logo__icon {
+    color: var(--accent);
+    font-size: 1rem;
+  }
+
+  .logo__accent {
+    color: var(--accent);
+  }
+
+  .nav__list {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .nav__link {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all var(--transition);
+  }
+
+  .nav__link:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .nav__cta {
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .burger span {
+    width: 22px;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: var(--transition);
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      top: 8px;
+      width: calc(100% - 16px);
+    }
+
+    .nav, .nav__cta {
+      display: none;
+    }
+
+    .burger {
+      display: flex;
+    }
+  }
+</style>

@@ -1,0 +1,165 @@
+---
+export interface Project {
+  title: string;
+  description: string;
+  details: string;
+  tags: string[];
+  image: string;
+  links: { label: string; url: string }[];
+}
+
+const projects: Project[] = [
+  {
+    title: 'Azari Minecraft Server',
+    description: 'Полноценный игровой сервер на Purpur 1.21 с кастомным контентом',
+    details: 'Разработка плагинов на Paper API, Denizen-скрипты, ItemsAdder контент, кастомные миры с Tectonic генерацией, собственная экономика и квестовая система.',
+    tags: ['Paper', 'Purpur', 'Denizen', 'ItemsAdder', 'Java'],
+    image: 'https://placehold.co/1200x600/231a16/f97316?text=Azari+Server',
+    links: [
+      { label: 'GitHub', url: '#' },
+      { label: 'Демо', url: '#' },
+    ],
+  },
+  {
+    title: 'Аналитическая платформа',
+    description: 'Система сбора и визуализации данных в реальном времени',
+    details: 'Архитектура микросервисов: API Gateway, сервис аутентификации, обработчик событий через Kafka, веб-сокеты для real-time обновлений, D3.js для графиков.',
+    tags: ['React', 'Node.js', 'Kafka', 'D3.js', 'Docker'],
+    image: 'https://placehold.co/1200x600/231a16/f97316?text=Analytics',
+    links: [
+      { label: 'GitHub', url: '#' },
+      { label: 'Live Demo', url: '#' },
+    ],
+  },
+];
+---
+
+<section class="projects section">
+  <div class="container">
+    <h2 class="section-title">Проекты</h2>
+    <div class="projects__list">
+      {projects.map((project) => (
+        <article class="project">
+          <div class="project__image">
+            <img src={project.image} alt={project.title} loading="lazy" />
+          </div>
+          <div class="project__body">
+            <h3 class="project__title">{project.title}</h3>
+            <p class="project__desc">{project.description}</p>
+            <p class="project__details">{project.details}</p>
+            <div class="project__tags">
+              {project.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+            <div class="project__links">
+              {project.links.map((link) => (
+                <a href={link.url} class="btn btn-primary">{link.label}</a>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects__list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .project {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: border-color var(--transition);
+  }
+
+  .project:hover {
+    border-color: var(--accent);
+  }
+
+  .project__image {
+    overflow: hidden;
+  }
+
+  .project__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .project:hover .project__image img {
+    transform: scale(1.03);
+  }
+
+  .project__body {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .project__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .project__desc {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .project__details {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .project__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .project .tag {
+    padding: 4px 12px;
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--accent);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
+  .project__links {
+    display: flex;
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .project {
+      grid-template-columns: 1fr;
+    }
+
+    .project__image {
+      aspect-ratio: 16 / 9;
+    }
+
+    .project__body {
+      padding: 24px;
+    }
+  }
+</style>
