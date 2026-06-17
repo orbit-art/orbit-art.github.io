@@ -54,6 +54,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  cursor: none;
 }
 
 ::selection {
@@ -61,7 +62,7 @@ body {
   color: #fff;
 }
 
-a { color: inherit; text-decoration: none; }
+a { color: inherit; text-decoration: none; cursor: none; }
 img { max-width: 100%; height: auto; display: block; }
 
 .container {
@@ -129,6 +130,7 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: none;
 }
 
 .glass-card:hover {
@@ -176,7 +178,7 @@ img { max-width: 100%; height: auto; display: block; }
   border-radius: var(--radius);
   font-size: 0.9rem;
   font-weight: 600;
-  cursor: pointer;
+  cursor: none;
   transition: all var(--transition);
   border: none;
   font-family: inherit;
@@ -226,6 +228,7 @@ img { max-width: 100%; height: auto; display: block; }
   letter-spacing: 0.3px;
   border: 1px solid rgba(249, 115, 22, 0.2);
   transition: all var(--transition);
+  cursor: none;
 }
 
 .tag:hover {
@@ -281,4 +284,10 @@ img { max-width: 100%; height: auto; display: block; }
   .section { padding: 80px 0; }
   .section-title { font-size: 2rem; }
   .section-subtitle { font-size: 1rem; }
+}
+
+@media (max-width: 768px), (prefers-reduced-motion: reduce) {
+  body, a, .btn, .tag, .glass-card {
+    cursor: auto !important;
+  }
 }

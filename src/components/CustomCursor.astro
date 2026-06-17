@@ -1,0 +1,154 @@
+---
+
+---
+
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-glow" aria-hidden="true"></div>
+
+<script>
+  (() => {
+    const dot = document.querySelector('.cursor-dot') as HTMLElement;
+    const ring = document.querySelector('.cursor-ring') as HTMLElement;
+    const glow = document.querySelector('.cursor-glow') as HTMLElement;
+
+    if (!dot || !ring || !glow) return;
+
+    const isTouch = !window.matchMedia('(hover: hover)').matches;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (isTouch || prefersReduced) {
+      dot.style.display = 'none';
+      ring.style.display = 'none';
+      glow.style.display = 'none';
+      document.documentElement.style.cursor = 'auto';
+      return;
+    }
+
+    document.documentElement.style.cursor = 'none';
+
+    let mx = -100, my = -100;
+    let rx = -100, ry = -100;
+    let gx = -100, gy = -100;
+    let hovering = false;
+
+    const selectors = 'a, button, .glass-card, .btn, .tag, .project-card, .sidebar__link, .hero__render-wrap, [data-cursor-pointer]';
+
+    document.addEventListener('mousemove', (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+    });
+
+    document.addEventListener('mouseover', (e) => {
+      if ((e.target as HTMLElement)?.closest(selectors)) {
+        hovering = true;
+        ring.classList.add('cursor-ring--hover');
+        dot.classList.add('cursor-dot--hover');
+        glow.classList.add('cursor-glow--hover');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if ((e.target as HTMLElement)?.closest(selectors)) {
+        hovering = false;
+        ring.classList.remove('cursor-ring--hover');
+        dot.classList.remove('cursor-dot--hover');
+        glow.classList.remove('cursor-glow--hover');
+      }
+    });
+
+    function animate() {
+      dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+
+      const ringSpeed = 0.12;
+      rx += (mx - rx) * ringSpeed;
+      ry += (my - ry) * ringSpeed;
+      const ringSize = hovering ? 48 : 36;
+      ring.style.transform = `translate(${rx - ringSize / 2}px, ${ry - ringSize / 2}px)`;
+
+      const glowSpeed = 0.06;
+      gx += (mx - gx) * glowSpeed;
+      gy += (my - gy) * glowSpeed;
+      glow.style.transform = `translate(${gx - 60}px, ${gy - 60}px)`;
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    document.addEventListener('astro:page-load', () => {
+      document.documentElement.style.cursor = 'none';
+    });
+  })();
+</script>
+
+<style is:global>
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    will-change: transform;
+    border-radius: 50%;
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.3);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+  }
+
+  .cursor-dot--hover {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 24px rgba(249, 115, 22, 0.5);
+  }
+
+  .cursor-ring {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(249, 115, 22, 0.4);
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.3s,
+                background 0.3s;
+  }
+
+  .cursor-ring--hover {
+    width: 48px;
+    height: 48px;
+    border-color: rgba(249, 115, 22, 0.6);
+    background: rgba(249, 115, 22, 0.06);
+  }
+
+  .cursor-glow {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
+    transition: opacity 0.4s;
+    opacity: 0.7;
+  }
+
+  .cursor-glow--hover {
+    opacity: 1;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%);
+  }
+
+  @media (max-width: 768px) {
+    .cursor-dot, .cursor-ring, .cursor-glow {
+      display: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-dot, .cursor-ring, .cursor-glow {
+      display: none !important;
+    }
+  }
+</style>
