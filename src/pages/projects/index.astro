@@ -14,7 +14,7 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
 const projectImages = await Promise.all(
   projects.map(async (p) => {
     const resolved = imgMap[p.data.image] ?? zarnitsaImg;
-    return await getImage({ src: resolved, width: 720, format: 'webp' });
+    return await getImage({ src: resolved, width: 720, format: 'webp', quality: 90 });
   })
 );
 ---

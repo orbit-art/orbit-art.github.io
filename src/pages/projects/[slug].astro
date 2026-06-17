@@ -31,11 +31,11 @@ const { project } = Astro.props;
 const { data } = project;
 const { Content } = await render(project);
 
-const heroImage = await getImage({ src: imgMap[data.image] ?? mainImg, width: 1200, format: 'webp' });
+const heroImage = await getImage({ src: imgMap[data.image] ?? mainImg, width: 1200, format: 'webp', quality: 90 });
 const galleryImages = await Promise.all(
   (data.gallery ?? []).map(async (img: string) => {
     const resolved = imgMap[img] ?? mainImg;
-    return await getImage({ src: resolved, width: 1200, format: 'webp' });
+    return await getImage({ src: resolved, width: 1200, format: 'webp', quality: 90 });
   })
 );
 ---
