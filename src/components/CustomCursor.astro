@@ -2,79 +2,183 @@
 
 ---
 
-<div class="cursor-dot" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"></div>
-<div class="cursor-glow" aria-hidden="true"></div>
+<canvas class="cursor-canvas" aria-hidden="true"></canvas>
+<div class="cursor-pen" aria-hidden="true"></div>
 
 <script>
   (() => {
-    const dot = document.querySelector('.cursor-dot') as HTMLElement;
-    const ring = document.querySelector('.cursor-ring') as HTMLElement;
-    const glow = document.querySelector('.cursor-glow') as HTMLElement;
-
-    if (!dot || !ring || !glow) return;
-
     const isTouch = !window.matchMedia('(hover: hover)').matches;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isTouch || prefersReduced) return;
 
-    if (isTouch || prefersReduced) {
-      dot.style.display = 'none';
-      ring.style.display = 'none';
-      glow.style.display = 'none';
-      document.documentElement.style.cursor = 'auto';
-      return;
-    }
+    const canvas = document.querySelector('.cursor-canvas') as HTMLCanvasElement;
+    const pen = document.querySelector('.cursor-pen') as HTMLElement;
+    if (!canvas || !pen) return;
+
+    const ctx = canvas.getContext('2d')!;
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     document.documentElement.style.cursor = 'none';
 
-    let mx = -100, my = -100;
-    let rx = -100, ry = -100;
-    let gx = -100, gy = -100;
+    let mx = -200, my = -200;
+    let pmx = -200, pmy = -200;
+    let speed = 0;
     let hovering = false;
+    let clickBurst = 0;
 
     const selectors = 'a, button, .glass-card, .btn, .tag, .project-card, .sidebar__link, .hero__render-wrap, [data-cursor-pointer]';
+
+    interface Particle {
+      x: number; y: number;
+      vx: number; vy: number;
+      life: number; maxLife: number;
+      size: number; rot: number;
+      hue: number;
+    }
+
+    const particles: Particle[] = [];
+    const MAX_PARTICLES = 80;
+
+    function spawnTrail(x: number, y: number, count: number) {
+      for (let i = 0; i < count; i++) {
+        if (particles.length >= MAX_PARTICLES) particles.shift();
+        const angle = Math.random() * Math.PI * 2;
+        const v = Math.random() * 1.5 + 0.3;
+        particles.push({
+          x: x + (Math.random() - 0.5) * 6,
+          y: y + (Math.random() - 0.5) * 6,
+          vx: Math.cos(angle) * v,
+          vy: Math.sin(angle) * v,
+          life: 1,
+          maxLife: 30 + Math.random() * 40,
+          size: Math.random() * 3 + 1.5,
+          rot: Math.random() * Math.PI * 2,
+          hue: 20 + Math.random() * 20,
+        });
+      }
+    }
+
+    function spawnBurst(x: number, y: number) {
+      for (let i = 0; i < 18; i++) {
+        if (particles.length >= MAX_PARTICLES) particles.shift();
+        const angle = (i / 18) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+        const v = Math.random() * 6 + 2;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * v,
+          vy: Math.sin(angle) * v,
+          life: 1,
+          maxLife: 25 + Math.random() * 20,
+          size: Math.random() * 4 + 2,
+          rot: Math.random() * Math.PI * 2,
+          hue: Math.random() > 0.5 ? 25 : 45,
+        });
+      }
+    }
 
     document.addEventListener('mousemove', (e) => {
       mx = e.clientX;
       my = e.clientY;
     });
 
+    document.addEventListener('mousedown', () => {
+      clickBurst = 1;
+    });
+
     document.addEventListener('mouseover', (e) => {
       if ((e.target as HTMLElement)?.closest(selectors)) {
         hovering = true;
-        ring.classList.add('cursor-ring--hover');
-        dot.classList.add('cursor-dot--hover');
-        glow.classList.add('cursor-glow--hover');
+        pen.classList.add('cursor-pen--hover');
       }
     });
 
     document.addEventListener('mouseout', (e) => {
       if ((e.target as HTMLElement)?.closest(selectors)) {
         hovering = false;
-        ring.classList.remove('cursor-ring--hover');
-        dot.classList.remove('cursor-dot--hover');
-        glow.classList.remove('cursor-glow--hover');
+        pen.classList.remove('cursor-pen--hover');
       }
     });
 
-    function animate() {
-      dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+    function update() {
+      const dx = mx - pmx;
+      const dy = my - pmy;
+      speed = Math.sqrt(dx * dx + dy * dy);
+      pmx += (mx - pmx) * 0.25;
+      pmy += (my - pmy) * 0.25;
 
-      const ringSpeed = 0.12;
-      rx += (mx - rx) * ringSpeed;
-      ry += (my - ry) * ringSpeed;
-      const ringSize = hovering ? 48 : 36;
-      ring.style.transform = `translate(${rx - ringSize / 2}px, ${ry - ringSize / 2}px)`;
+      const angle = Math.atan2(my - pmy, mx - pmx);
+      const tilt = Math.min(speed * 0.3, 15);
 
-      const glowSpeed = 0.06;
-      gx += (mx - gx) * glowSpeed;
-      gy += (my - gy) * glowSpeed;
-      glow.style.transform = `translate(${gx - 60}px, ${gy - 60}px)`;
+      pen.style.transform = `translate(${mx}px, ${my}px) rotate(${angle + Math.PI / 4}deg) translate(-50%, -50%) skewX(${-tilt}deg)`;
 
-      requestAnimationFrame(animate);
+      if (speed > 2) {
+        spawnTrail(pmx, pmy, speed > 10 ? 2 : 1);
+      }
+
+      if (clickBurst > 0) {
+        spawnBurst(mx, my);
+        clickBurst = 0;
+      }
+
+      ctx.clearRect(0, 0, W, H);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.96;
+        p.vy *= 0.96;
+        p.vy += 0.02;
+        p.rot += 0.05;
+        p.life -= 1 / p.maxLife;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        const alpha = p.life * 0.7;
+        const s = p.size * (0.5 + p.life * 0.5);
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = alpha;
+
+        if (p.size > 3) {
+          ctx.beginPath();
+          ctx.ellipse(0, 0, s, s * 0.6, 0, 0, Math.PI * 2);
+          ctx.fillStyle = `hsl(${p.hue}, 90%, 55%)`;
+          ctx.fill();
+        } else {
+          ctx.fillStyle = `hsl(${p.hue}, 85%, 60%)`;
+          ctx.fillRect(-s / 2, -s / 2, s, s);
+        }
+
+        ctx.restore();
+      }
+
+      requestAnimationFrame(update);
     }
 
-    animate();
+    update();
+
+    window.addEventListener('resize', () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
 
     document.addEventListener('astro:page-load', () => {
       document.documentElement.style.cursor = 'none';
@@ -83,72 +187,70 @@
 </script>
 
 <style is:global>
-  .cursor-dot,
-  .cursor-ring,
-  .cursor-glow {
+  .cursor-canvas {
     position: fixed;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 99998;
+  }
+
+  .cursor-pen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 22px;
+    height: 22px;
     pointer-events: none;
     z-index: 99999;
     will-change: transform;
-    border-radius: 50%;
+    transform-origin: center center;
   }
 
-  .cursor-dot {
-    width: 8px;
-    height: 8px;
-    background: var(--accent);
-    box-shadow: 0 0 8px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.3);
-    transition: width 0.2s, height 0.2s, background 0.2s;
+  .cursor-pen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 3px;
+    height: 16px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    transform: translateX(-50%) rotate(-45deg);
+    transform-origin: bottom center;
+    border-radius: 1px 1px 0 0;
   }
 
-  .cursor-dot--hover {
+  .cursor-pen::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
     width: 6px;
     height: 6px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 24px rgba(249, 115, 22, 0.5);
+    background: var(--accent);
+    border-radius: 50% 50% 50% 0;
+    transform: translateX(-50%) rotate(-45deg);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
   }
 
-  .cursor-ring {
-    width: 36px;
-    height: 36px;
-    border: 1.5px solid rgba(249, 115, 22, 0.4);
-    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                height 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.3s,
-                background 0.3s;
+  .cursor-pen--hover::after {
+    transform: translateX(-50%) rotate(-45deg) scale(1.4);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.8), 0 0 30px rgba(249, 115, 22, 0.5), 0 0 60px rgba(249, 115, 22, 0.2);
   }
 
-  .cursor-ring--hover {
-    width: 48px;
-    height: 48px;
-    border-color: rgba(249, 115, 22, 0.6);
-    background: rgba(249, 115, 22, 0.06);
-  }
-
-  .cursor-glow {
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
-    transition: opacity 0.4s;
-    opacity: 0.7;
-  }
-
-  .cursor-glow--hover {
-    opacity: 1;
-    background: radial-gradient(circle, rgba(249, 115, 22, 0.14) 0%, transparent 70%);
+  .cursor-pen--hover::before {
+    height: 20px;
+    background: linear-gradient(to bottom, #fff, var(--accent));
   }
 
   @media (max-width: 768px) {
-    .cursor-dot, .cursor-ring, .cursor-glow {
-      display: none !important;
-    }
+    .cursor-canvas, .cursor-pen { display: none !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .cursor-dot, .cursor-ring, .cursor-glow {
-      display: none !important;
-    }
+    .cursor-canvas, .cursor-pen { display: none !important; }
   }
 </style>
