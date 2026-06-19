@@ -234,16 +234,54 @@ const galleryImages = await Promise.all(
   }
 
   @media (max-width: 768px) {
+    .project-detail {
+      padding: 100px 0 60px;
+    }
+
     .project-detail__title {
       font-size: 2rem;
+    }
+
+    .project-detail__desc {
+      font-size: 1rem;
     }
 
     .project-detail__content {
       padding: 24px;
     }
 
+    .project-detail__image {
+      margin-bottom: 32px;
+    }
+
+    .project-detail__gallery-title {
+      font-size: 1.4rem;
+    }
+
     .gallery__grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .project-detail {
+      padding: 80px 0 40px;
+    }
+
+    .project-detail__title {
+      font-size: 1.6rem;
+    }
+
+    .project-detail__desc {
+      font-size: 0.9rem;
+    }
+
+    .project-detail__content {
+      padding: 18px;
+    }
+
+    .project-detail__links {
+      flex-direction: column;
     }
   }
 </style>

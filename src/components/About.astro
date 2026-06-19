@@ -281,6 +281,10 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
       order: 0;
     }
 
+    .about__title {
+      font-size: 2.2rem;
+    }
+
     .about__subtitle {
       margin-left: 0;
     }
@@ -298,8 +302,43 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
       font-size: 2.5rem;
     }
 
+    .about__bio, .about__skills {
+      padding: 24px;
+    }
+
+    .about__tools {
+      padding: 20px 24px;
+    }
+
     .about.section {
       padding-bottom: 100px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about__title {
+      font-size: 1.8rem;
+    }
+
+    .about__avatar-inner {
+      width: 90px;
+      height: 90px;
+    }
+
+    .about__avatar-letter {
+      font-size: 2rem;
+    }
+
+    .about__bio, .about__skills {
+      padding: 18px;
+    }
+
+    .about__tools {
+      padding: 16px 18px;
+    }
+
+    .about__content {
+      gap: 16px;
     }
   }
 </style>

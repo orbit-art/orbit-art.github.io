@@ -49,6 +49,15 @@ const socialItems = [] as { href: string; icon: string }[];
   )}
 </aside>
 
+<nav class="mobile-nav" aria-label="Навигация">
+  {navItems.map((item) => (
+    <a href={item.href} class="mobile-nav__link">
+      <span class="mobile-nav__icon" set:html={item.icon} />
+      <span class="mobile-nav__label">{item.label}</span>
+    </a>
+  ))}
+</nav>
+
 <style>
   .sidebar {
     position: fixed;
@@ -153,7 +162,64 @@ const socialItems = [] as { href: string; icon: string }[];
     padding: 0 4px;
   }
 
+  .mobile-nav {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     .sidebar { display: none; }
+
+    .mobile-nav {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .mobile-nav__link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 16px;
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      text-decoration: none;
+      transition: all var(--transition);
+      font-size: 0.65rem;
+      font-weight: 500;
+      min-width: 60px;
+    }
+
+    .mobile-nav__link:active {
+      transform: scale(0.92);
+    }
+
+    .mobile-nav__link[aria-current="page"],
+    .mobile-nav__link:hover {
+      color: var(--accent);
+      background: rgba(249, 115, 22, 0.08);
+    }
+
+    .mobile-nav__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+
+    .mobile-nav__label {
+      color: inherit;
+      line-height: 1;
+    }
   }
 </style>

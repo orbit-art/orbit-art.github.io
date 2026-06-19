@@ -213,4 +213,29 @@ const optimizedHero = await getImage({ src: heroImg, width: 1200, format: 'webp'
     .hero__visual { order: -1; margin-top: 0; }
     .hero__render-wrap { max-width: 380px; }
   }
+
+  @media (max-width: 768px) {
+    .hero { min-height: auto; padding-top: 100px; padding-bottom: 60px; }
+    .hero__title { font-size: 2.2rem; }
+    .hero__subtitle { font-size: 0.95rem; }
+    .hero__blob { width: 300px; height: 300px; }
+    .hero__render-wrap { max-width: 280px; }
+    .hero__inner { gap: 32px; }
+    .hero__stats { gap: 24px; }
+    .hero__stat-value { font-size: 1.3rem; }
+    .hero__stat-label { font-size: 0.75rem; }
+    .hero__actions { flex-direction: column; align-items: center; gap: 10px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero { padding-top: 80px; padding-bottom: 40px; }
+    .hero__title { font-size: 1.8rem; letter-spacing: -1px; }
+    .hero__subtitle { font-size: 0.88rem; }
+    .hero__badge { font-size: 0.78rem; padding: 5px 12px; }
+    .hero__render-wrap { max-width: 220px; }
+    .hero__blob { width: 200px; height: 200px; }
+    .hero__stats { gap: 16px; }
+    .hero__stat-value { font-size: 1.1rem; }
+    .hero__inner { gap: 24px; }
+  }
 </style>
