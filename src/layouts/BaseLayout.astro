@@ -1,5 +1,4 @@
 ---
-import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 import GridBackground from '../components/GridBackground.astro';
@@ -23,19 +22,18 @@ const { title = 'Orbit-dev' } = Astro.props;
     <meta property="og:title" content={title} />
     <meta property="og:description" content="Скинмейкер, дизайнер и разработчик. Создаю персонажи, интерфейсы и цифровые инструменты." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/images/render.png" />
+    <meta property="og:image" content="/images/render-og.webp" />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" as="style" />
-    <ClientRouter />
   </head>
   <body>
     <CustomCursor />
     <GridBackground />
     <NoiseOverlay />
-    <Sidebar transition:persist />
+    <Sidebar />
     <main class="main">
       <slot />
     </main>
@@ -118,7 +116,7 @@ const { title = 'Orbit-dev' } = Astro.props;
           }
         }
 
-        function onMouseMove(e) {
+        document.addEventListener('mousemove', function(e) {
           mx = e.clientX;
           my = e.clientY;
           if (!mouseOnPage) {
@@ -126,42 +124,30 @@ const { title = 'Orbit-dev' } = Astro.props;
             if (pen) pen.style.opacity = '1';
             if (canvas) canvas.style.opacity = '1';
           }
-        }
-
-        function onMouseDown() { clickBurst = 1; }
-
-        function onMouseOver(e) {
-          if (pen && (e.target).closest(selectors)) {
+        });
+        document.addEventListener('mousedown', function() { clickBurst = 1; });
+        document.addEventListener('mouseover', function(e) {
+          if (pen && e.target.closest(selectors)) {
             hovering = true;
             pen.classList.add('cursor-pen--hover');
           }
-        }
-
-        function onMouseOut(e) {
-          if (pen && (e.target).closest(selectors)) {
+        });
+        document.addEventListener('mouseout', function(e) {
+          if (pen && e.target.closest(selectors)) {
             hovering = false;
             pen.classList.remove('cursor-pen--hover');
           }
-        }
-
-        function onMouseLeave() {
+        });
+        document.addEventListener('mouseleave', function() {
           mouseOnPage = false;
           if (pen) pen.style.opacity = '0';
           if (canvas) canvas.style.opacity = '0';
-        }
-
-        function onMouseEnter() {
+        });
+        document.addEventListener('mouseenter', function() {
           mouseOnPage = true;
           if (pen) pen.style.opacity = '1';
           if (canvas) canvas.style.opacity = '1';
-        }
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mousedown', onMouseDown);
-        document.addEventListener('mouseover', onMouseOver);
-        document.addEventListener('mouseout', onMouseOut);
-        document.addEventListener('mouseleave', onMouseLeave);
-        document.addEventListener('mouseenter', onMouseEnter);
+        });
         window.addEventListener('resize', resizeCanvas);
 
         function update() {

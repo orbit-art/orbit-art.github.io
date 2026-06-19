@@ -169,10 +169,12 @@ const optimizedHero = await getImage({ src: heroImg, width: 1200, format: 'webp'
     display: flex;
     flex-direction: column;
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 60px rgba(249, 115, 22, 0.08), 0 20px 60px rgba(0, 0, 0, 0.4);
   }
 
   .hero__render-wrap:hover {
     transform: scale(1.02);
+    box-shadow: 0 0 80px rgba(249, 115, 22, 0.15), 0 24px 70px rgba(0, 0, 0, 0.5);
   }
 
   .hero__render-wrap:active {
@@ -193,6 +195,11 @@ const optimizedHero = await getImage({ src: heroImg, width: 1200, format: 'webp'
     width: 80%;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+  }
+
+  .hero__stat {
+    text-align: center;
   }
 
   .t-text-reveal {
