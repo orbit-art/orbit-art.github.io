@@ -1,9 +1,9 @@
 ---
 const skills = [
-  { label: 'Дизайн', value: '4 года' },
-  { label: 'Скинмейкинг', value: '1.5 года' },
-  { label: 'Рендермекинг', value: '1 год' },
-  { label: 'Кодинг', value: '3 года' },
+  { label: 'Дизайн', value: '4 года', pct: 88 },
+  { label: 'Скинмейкинг', value: '1.5 года', pct: 78 },
+  { label: 'Рендермекинг', value: '1 год', pct: 60 },
+  { label: 'Кодинг', value: '3 года', pct: 82 },
 ];
 
 const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Figma', 'Git', 'Minecraft'];
@@ -20,6 +20,7 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
         </p>
       </div>
       <div class="about__avatar t-text-reveal" style="--t-stagger: 1">
+        <div class="about__avatar-ring"></div>
         <div class="about__avatar-inner">
           <span class="about__avatar-letter">O</span>
         </div>
@@ -27,7 +28,7 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
     </div>
 
     <div class="about__content">
-      <div class="about__bio t-text-reveal" style="--t-stagger: 2">
+      <div class="about__bio scroll-reveal">
         <p>
           Начинал со скинмейкинга в Minecraft, дорос до полноценных проектов.
           Рисую персонажей, моделирую в 3D, верстаю интерфейсы и пишу код.
@@ -38,19 +39,24 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
         </p>
       </div>
 
-      <div class="about__skills t-text-reveal" style="--t-stagger: 3">
+      <div class="about__skills scroll-reveal">
         <div class="skills__list">
           {skills.map((s) => (
             <div class="skill">
-              <span class="skill__label">{s.label}</span>
-              <span class="skill__value">{s.value}</span>
+              <div class="skill__header">
+                <span class="skill__label">{s.label}</span>
+                <span class="skill__value">{s.value}</span>
+              </div>
+              <div class="skill__bar">
+                <div class="skill__fill" style={`--skill-pct: ${s.pct}%`}></div>
+              </div>
             </div>
           ))}
         </div>
       </div>
     </div>
 
-    <div class="about__tools t-text-reveal" style="--t-stagger: 4">
+    <div class="about__tools scroll-reveal">
       <h3 class="about__tools-title">Инструменты</h3>
       <div class="tools__cloud">
         {tools.map((tool) => <span class="tag">{tool}</span>)}
@@ -105,23 +111,38 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
 
   .about__avatar {
     flex-shrink: 0;
+    position: relative;
+  }
+
+  .about__avatar-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(249, 115, 22, 0.15);
+    animation: avatarPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes avatarPulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.08); opacity: 0.2; }
   }
 
   .about__avatar-inner {
     width: 200px;
     height: 200px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05));
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(249, 115, 22, 0.03));
     border: 1px solid rgba(249, 115, 22, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 40px rgba(249, 115, 22, 0.08);
   }
 
   .about__avatar-inner:hover {
     border-color: rgba(249, 115, 22, 0.4);
-    box-shadow: 0 0 40px rgba(249, 115, 22, 0.1);
+    box-shadow: 0 0 60px rgba(249, 115, 22, 0.15);
     transform: scale(1.05);
   }
 
@@ -143,17 +164,17 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
 
   .about__bio {
     padding: 32px;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .about__bio:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
   }
 
@@ -169,17 +190,17 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
 
   .about__skills {
     padding: 32px;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .about__skills:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
   }
 
@@ -189,17 +210,11 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
     gap: 20px;
   }
 
-  .skill {
+  .skill__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  }
-
-  .skill:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+    margin-bottom: 8px;
   }
 
   .skill__label {
@@ -209,28 +224,46 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
   }
 
   .skill__value {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
-    background: var(--gradient-text);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent);
+  }
+
+  .skill__bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .skill__fill {
+    height: 100%;
+    width: 0;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.3);
+  }
+
+  .revealed .skill__fill {
+    width: var(--skill-pct);
   }
 
   .about__tools {
     padding: 28px 32px;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius-lg);
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .about__tools:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
   }
 
@@ -274,65 +307,22 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
       order: 0;
     }
 
-    .about__title {
-      font-size: 2.2rem;
-    }
-
-    .about__subtitle {
-      margin-left: 0;
-    }
-
-    .about__content {
-      grid-template-columns: 1fr;
-    }
-
-    .about__avatar-inner {
-      width: 120px;
-      height: 120px;
-    }
-
-    .about__avatar-letter {
-      font-size: 2.5rem;
-    }
-
-    .about__bio, .about__skills {
-      padding: 24px;
-    }
-
-    .about__tools {
-      padding: 20px 24px;
-    }
-
-    .about.section {
-      padding-bottom: 100px;
-    }
+    .about__title { font-size: 2.2rem; }
+    .about__subtitle { margin-left: 0; }
+    .about__content { grid-template-columns: 1fr; }
+    .about__avatar-inner { width: 120px; height: 120px; }
+    .about__avatar-letter { font-size: 2.5rem; }
+    .about__bio, .about__skills { padding: 24px; }
+    .about__tools { padding: 20px 24px; }
+    .about.section { padding-bottom: 100px; }
   }
 
   @media (max-width: 480px) {
-    .about__title {
-      font-size: 1.8rem;
-    }
-
-    .about__avatar-inner {
-      width: 90px;
-      height: 90px;
-    }
-
-    .about__avatar-letter {
-      font-size: 2rem;
-    }
-
-    .about__bio, .about__skills {
-      padding: 18px;
-    }
-
-    .about__tools {
-      padding: 16px 18px;
-    }
-
-    .about__content {
-      gap: 16px;
-    }
+    .about__title { font-size: 1.8rem; }
+    .about__avatar-inner { width: 90px; height: 90px; }
+    .about__avatar-letter { font-size: 2rem; }
+    .about__bio, .about__skills { padding: 18px; }
+    .about__tools { padding: 16px 18px; }
+    .about__content { gap: 16px; }
   }
 </style>
-
