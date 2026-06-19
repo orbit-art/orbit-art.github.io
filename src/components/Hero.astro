@@ -48,7 +48,6 @@ const optimizedHero = await getImage({ src: heroImg, width: 1200, format: 'webp'
       <div class="hero__orb hero__orb--1"></div>
       <div class="hero__orb hero__orb--2"></div>
       <div class="hero__render-wrap">
-        <div class="hero__render-glow"></div>
         <img src={optimizedHero.src} srcset={optimizedHero.srcSet.attribute} alt="3D рендер персонажа" class="hero__render" width="1200" height="1500" fetchpriority="high" />
         <div class="hero__render-line"></div>
       </div>
@@ -214,14 +213,6 @@ const optimizedHero = await getImage({ src: heroImg, width: 1200, format: 'webp'
   .hero__render-wrap:hover {
     transform: scale(1.02) translateY(-4px);
     box-shadow: 0 0 100px rgba(249, 115, 22, 0.2), 0 30px 80px rgba(0, 0, 0, 0.6);
-  }
-
-  .hero__render-glow {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 30%, rgba(249, 115, 22, 0.15) 0%, transparent 60%);
-    z-index: 1;
-    pointer-events: none;
   }
 
   .hero__render-wrap:active {
