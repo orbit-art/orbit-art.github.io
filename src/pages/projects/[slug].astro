@@ -44,14 +44,14 @@ const galleryImages = await Promise.all(
   <article class="project-detail">
     <div class="container">
       <div class="project-detail__header">
-        <a href="/projects" class="project-detail__back">← Все проекты</a>
-        <div class="project-detail__tags">
+        <a href="/projects" class="project-detail__back t-text-reveal">← Все проекты</a>
+        <div class="project-detail__tags t-text-reveal" style="--t-stagger: 1">
           {data.tags.map((tag) => <span class="tag">{tag}</span>)}
         </div>
-        <h1 class="project-detail__title">{data.title}</h1>
-        <p class="project-detail__desc">{data.description}</p>
+        <h1 class="project-detail__title t-text-reveal" style="--t-stagger: 2">{data.title}</h1>
+        <p class="project-detail__desc t-text-reveal" style="--t-stagger: 3">{data.description}</p>
         {data.links && (
-          <div class="project-detail__links">
+          <div class="project-detail__links t-text-reveal" style="--t-stagger: 4">
             {data.links.map((link) => (
               <a href={link.url} class="btn btn-primary" target="_blank">{link.label}</a>
             ))}
@@ -59,7 +59,7 @@ const galleryImages = await Promise.all(
         )}
       </div>
 
-      <div class="project-detail__image glass-card">
+      <div class="project-detail__image glass-card t-text-reveal" style="--t-stagger: 3">
         <img src={heroImage.src} srcset={heroImage.srcSet.attribute} alt={data.title} width={1200} height={800} loading="lazy" />
       </div>
 

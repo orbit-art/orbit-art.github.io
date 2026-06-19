@@ -202,12 +202,6 @@ const optimizedHero = await getImage({ src: heroImg, width: 1200, format: 'webp'
     text-align: center;
   }
 
-  .t-text-reveal {
-    opacity: 0;
-    animation: textReveal var(--text-reveal-dur) var(--text-reveal-ease) forwards;
-    animation-delay: calc(var(--t-stagger, 0) * var(--text-reveal-stagger));
-  }
-
   @media (max-width: 968px) {
     .hero__inner {
       grid-template-columns: 1fr;

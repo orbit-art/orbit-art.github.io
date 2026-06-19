@@ -13,13 +13,13 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
   <div class="container">
     <div class="about__header">
       <div class="about__header-content">
-        <span class="section-label">Обо мне</span>
-        <h2 class="about__title">Кто я<br />и что умею</h2>
-        <p class="about__subtitle">
+        <span class="section-label t-text-reveal">Обо мне</span>
+        <h2 class="about__title t-text-reveal" style="--t-stagger: 1">Кто я<br />и что умею</h2>
+        <p class="about__subtitle t-text-reveal" style="--t-stagger: 2">
           Скинмейкер, дизайнер и разработчик. Создаю персонажей, интерфейсы и цифровые инструменты.
         </p>
       </div>
-      <div class="about__avatar">
+      <div class="about__avatar t-text-reveal" style="--t-stagger: 1">
         <div class="about__avatar-inner">
           <span class="about__avatar-letter">O</span>
         </div>
@@ -27,7 +27,7 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
     </div>
 
     <div class="about__content">
-      <div class="about__bio">
+      <div class="about__bio t-text-reveal" style="--t-stagger: 2">
         <p>
           Начинал со скинмейкинга в Minecraft, дорос до полноценных проектов.
           Рисую персонажей, моделирую в 3D, верстаю интерфейсы и пишу код.
@@ -38,7 +38,7 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
         </p>
       </div>
 
-      <div class="about__skills">
+      <div class="about__skills t-text-reveal" style="--t-stagger: 3">
         <div class="skills__list">
           {skills.map((s) => (
             <div class="skill">
@@ -50,7 +50,7 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
       </div>
     </div>
 
-    <div class="about__tools" data-reveal>
+    <div class="about__tools t-text-reveal" style="--t-stagger: 4">
       <h3 class="about__tools-title">Инструменты</h3>
       <div class="tools__cloud">
         {tools.map((tool) => <span class="tag">{tool}</span>)}
@@ -226,13 +226,6 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--radius-lg);
     transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .about__tools.revealed {
-    opacity: 1;
-    transform: translateY(0);
   }
 
   .about__tools:hover {
@@ -343,18 +336,3 @@ const tools = ['Photoshop', 'Blender', 'Blockbench', 'Aseprite', 'VS Code', 'Fig
   }
 </style>
 
-<script>
-  function initReveal() {
-    const el = document.querySelector('[data-reveal]');
-    if (!el) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        entry.target.classList.toggle('revealed', entry.isIntersecting);
-      });
-    }, { threshold: 0.2 });
-    observer.observe(el);
-  }
-
-  initReveal();
-  document.addEventListener('astro:page-load', initReveal);
-</script>
