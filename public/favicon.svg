@@ -1,4 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#19120f"/>
-  <text x="50" y="68" font-size="48" font-weight="800" fill="#f97316" text-anchor="middle" font-family="sans-serif">O</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="orb" x1="30" y1="30" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fb923c"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="10" y1="55" x2="110" y2="65" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.3"/>
+      <stop offset="30%" stop-color="#f97316" stop-opacity="0.9"/>
+      <stop offset="70%" stop-color="#fb923c" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#f97316" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <!-- planet -->
+  <circle cx="60" cy="60" r="26" fill="url(#orb)"/>
+  <!-- highlight -->
+  <ellipse cx="52" cy="50" rx="10" ry="8" fill="white" opacity="0.15"/>
+  <!-- ring -->
+  <ellipse cx="60" cy="60" rx="50" ry="16" stroke="url(#ring)" stroke-width="3" fill="none" transform="rotate(-18 60 60)"/>
+  <!-- ring dot -->
+  <circle cx="12" cy="47" r="4" fill="#f97316"/>
 </svg>
