@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar.astro';
 import GridBackground from '../components/GridBackground.astro';
 import NoiseOverlay from '../components/NoiseOverlay.astro';
 import CustomCursor from '../components/CustomCursor.astro';
+import Footer from '../components/Footer.astro';
 
 export interface Props {
   title?: string;
@@ -23,6 +24,12 @@ const { title = 'Orbit-dev' } = Astro.props;
     <meta property="og:description" content="Скинмейкер, дизайнер и разработчик. Создаю персонажи, интерфейсы и цифровые инструменты." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/images/render-og.webp" />
+    <meta property="og:url" content="https://orbit-art.github.io" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content="Скинмейкер, дизайнер и разработчик." />
+    <meta name="twitter:image" content="/images/render-og.webp" />
+    <link rel="canonical" href="https://orbit-art.github.io" />
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,6 +44,7 @@ const { title = 'Orbit-dev' } = Astro.props;
     <main class="main">
       <slot />
     </main>
+    <Footer />
     <script is:inline>
       (function() {
         var isTouch = !window.matchMedia('(hover: hover)').matches;
@@ -169,7 +177,6 @@ const { title = 'Orbit-dev' } = Astro.props;
 
         function update() {
           if (!canvas || !pen || !ctx) {
-            rafId = requestAnimationFrame(update);
             return;
           }
 

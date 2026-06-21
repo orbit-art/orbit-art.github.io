@@ -60,7 +60,7 @@ const galleryImages = await Promise.all(
       </div>
 
       <div class="project-detail__image glass-card t-text-reveal" style="--t-stagger: 3">
-        <img src={heroImage.src} srcset={heroImage.srcSet.attribute} alt={data.title} width={1200} height={800} loading="lazy" />
+        <img src={heroImage.src} alt={data.title} width={1200} height={800} loading="lazy" />
       </div>
 
       <div class="project-detail__content glass-card">
@@ -73,7 +73,7 @@ const galleryImages = await Promise.all(
           <div class="gallery__grid">
             {galleryImages.map((img) => (
               <div class="gallery__item glass-card">
-                <img src={img.src} srcset={img.srcSet.attribute} alt="" width={1200} height={800} loading="lazy" />
+                <img src={img.src} alt={`${data.title} - скриншот`} width={1200} height={800} loading="lazy" />
               </div>
             ))}
           </div>

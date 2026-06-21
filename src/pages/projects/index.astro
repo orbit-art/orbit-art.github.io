@@ -38,7 +38,7 @@ const projectImages = await Promise.all(
             style={`--i: ${i}`}
           >
             <div class="project-card__image">
-              <img src={projectImages[i].src} srcset={projectImages[i].srcSet.attribute} alt={project.data.title} width={720} height={480} loading="lazy" />
+              <img src={projectImages[i].src} alt={project.data.title} width={720} height={480} loading="lazy" />
             </div>
             <div class="project-card__body">
               <h3 class="project-card__title">{project.data.title}</h3>
@@ -65,7 +65,7 @@ const projectImages = await Promise.all(
 
   .project-card {
     display: grid;
-    grid-template-columns: 360px 1fr;
+    grid-template-columns: minmax(0, 360px) 1fr;
     overflow: hidden;
     cursor: pointer;
     text-decoration: none;
